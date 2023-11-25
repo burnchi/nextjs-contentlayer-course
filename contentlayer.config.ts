@@ -1,4 +1,6 @@
 import { defineDocumentType, makeSource } from 'contentlayer/source-files'
+import remarkGfm from 'remark-gfm'
+import rehypePrettyCode from 'rehype-pretty-code';
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -14,4 +16,24 @@ export const Post = defineDocumentType(() => ({
   },
 }))
 
-export default makeSource({ contentDirPath: 'posts', documentTypes: [Post] })
+
+const options = {
+  theme: 'github-dark',
+  defaultLang: {
+    block: 'bash',
+    inline: 'plaintext',
+  },
+}
+
+export default makeSource(
+  { 
+    contentDirPath: 'posts', 
+    documentTypes: [Post],
+    mdx: {
+      remarkPlugins: [remarkGfm],
+      rehypePlugins: [[rehypePrettyCode, options]],
+    }
+  
+  }
+  
+  )

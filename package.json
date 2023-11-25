@@ -14,9 +14,13 @@
     "next": "13.5.6",
     "next-contentlayer": "^0.3.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "rehype-pretty-code": "^0.10.2",
+    "remark-gfm": "^3.0.1",
+    "shiki": "^0.14.5"
   },
   "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20",
     "@types/react": "^18",
