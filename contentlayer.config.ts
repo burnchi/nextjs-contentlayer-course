@@ -1,6 +1,8 @@
 import { defineDocumentType, makeSource } from 'contentlayer/source-files'
 import remarkGfm from 'remark-gfm'
 import rehypePrettyCode from 'rehype-pretty-code';
+import {visit} from 'unist-util-visit'
+import GithubSlugger from 'github-slugger'
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -13,6 +15,27 @@ export const Post = defineDocumentType(() => ({
   },
   computedFields: {
     url: { type: 'string', resolve: (post) => `/posts/${post._raw.flattenedPath}` },
+    toc: {
+      type: "json",
+      resolve: async (doc) => {
+        const regulrExp = /\n(?<flag>#{1,6})\s+(?<content>.+)/g;
+        const codeExp = /```[\s\S]*?```/g;
+        const slugger = new GithubSlugger();
+        // console.log(doc.body.raw.replace(codeExp,''))
+        const headings = Array.from(doc.body.raw.replace(codeExp, '').matchAll(regulrExp)).map(({ groups },index) => {
+          const flag = groups?.flag;
+          const content = groups?.content;
+          return {
+            id: index,
+            level: flag?.length == 1 ? 'one' : flag?.length == 2 ? 'two' : flag?.length == 3 ? 'three' : flag?.length == 4 ? "four" : "five",
+            text: content,
+            slug: content ? slugger.slug(content) : undefined
+          }
+        })
+
+        return headings
+      }
+    },
   },
 }))
 
@@ -31,7 +54,36 @@ export default makeSource(
     documentTypes: [Post],
     mdx: {
       remarkPlugins: [remarkGfm],
-      rehypePlugins: [[rehypePrettyCode, options]],
+      rehypePlugins: [
+        () => (tree) => {
+          visit(tree, (node) => {
+            if (node?.type === "element" && node?.tagName === "pre") {
+              const [codeEl] = node.children;
+              if (codeEl.tagName !== "code") return;
+              node.raw = codeEl.children?.[0].value;
+              // console.log(node.raw);
+            }
+          });
+        },
+        [rehypePrettyCode, options],
+        () => (tree) => {
+          visit(tree, (node) => {
+            if (node?.type === "element" && node?.tagName === "div") {
+              if (!("data-rehype-pretty-code-fragment" in node.properties)) {
+                return;
+              }
+  
+              for (const child of node.children) {
+                if (child.tagName === "pre") {
+                  child.properties["raw"] = node.raw;
+                }
+              }
+            }
+          });
+        },
+      
+      
+      ],
     }
   
   }
