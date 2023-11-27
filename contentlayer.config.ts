@@ -3,6 +3,8 @@ import remarkGfm from 'remark-gfm'
 import rehypePrettyCode from 'rehype-pretty-code';
 import {visit} from 'unist-util-visit'
 import GithubSlugger from 'github-slugger'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -55,6 +57,8 @@ export default makeSource(
     mdx: {
       remarkPlugins: [remarkGfm],
       rehypePlugins: [
+        rehypeSlug,
+        [rehypeAutolinkHeadings,{behavior:"append"}],
         () => (tree) => {
           visit(tree, (node) => {
             if (node?.type === "element" && node?.tagName === "pre") {

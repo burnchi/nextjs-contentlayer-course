@@ -46,3 +46,25 @@ code {
   code[data-line-numbers-max-digits='3'] > [data-line]::before {
     width: 3rem;
   }
+
+  h1 .icon::before{
+    content: "#";
+    font-size: 0.8rem;
+  }
+  h2 .icon::before{
+    content: "##";
+    font-size: 0.7rem;
+  }
+  h3 .icon::before{
+    content: "###";
+    font-size: 0.6rem;
+  }
+
+  .icon{
+    background-color: white;
+  }
+
+
+  .is-active{
+    color: orange;
+  }
