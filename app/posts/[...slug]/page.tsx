@@ -6,6 +6,7 @@ import type { MDXComponents } from 'mdx/types'
 import Video from '@/components/Video'
 import Pre from '@/components/Pre'
 import { useEffect } from 'react'
+import RelaPost from '@/components/RelaPost'
 
 const mdxComponents: MDXComponents = {
   Video,
@@ -17,10 +18,11 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
   const slugPath = params.slug.join('/')
   // console.log(slugPath);
 
-
   const post = allPosts.find((post) => post._raw.flattenedPath === decodeURI(slugPath))
 
-
+  const suitablePost = allPosts.filter((post) => post._raw.sourceFileDir === decodeURI(params.slug[0]))
+  // console.log(suitablePost.length);
+  
   if (!post) throw new Error(`Post not found for slug: ${params.slug}`)
   const MDXContent = useMDXComponent(post.body.code)
 
@@ -34,8 +36,9 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
     return 
   }
 
+  
   useEffect(() => {
-    
+    // 目录链接自动高亮
     if (post.toc.length != 0) {
       const TableOfContents = {
         container: document.querySelector('.js-toc'),
@@ -156,7 +159,8 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
           }
         </ul>
       </div>
-      <article className="col-span-9 ">
+      {/* 文章主体 */}
+      <article className="col-span-7  min-h-[100vh]">
         <div className="mb-8 ">
           <time dateTime={post.date} className="mb-1 text-xs text-gray-600">
             {format(parseISO(post.date), 'LLLL d, yyyy')}
@@ -174,6 +178,10 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
           <MDXContent components={mdxComponents} />
         </div>
       </article>
+      {/* 相关文章栏 */}
+      <div className='col-span-2 sticky top-10 max-h-[80vh] overflow-auto'>
+        <RelaPost suitablePost={suitablePost} post={post}></RelaPost>
+      </div>
     </div>
   )
 }
