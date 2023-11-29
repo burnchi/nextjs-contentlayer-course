@@ -126,9 +126,9 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
   }, [post.toc.length])
   
   return (
-    <div className='w-full h-full border grid grid-cols-12 p-10'>
+    <div className='w-full h-full  grid grid-cols-12 p-10'>
       {/* 目录 */}
-      <div className='col-span-3 sticky top-10 max-h-[80vh] overflow-auto'>
+      <div className='col-span-3 sticky top-[10vh] max-h-[80vh] overflow-auto'>
         <ul className='text-base  js-toc' >
           {
             post.toc.length != 0 ?
@@ -179,7 +179,7 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
         </div>
       </article>
       {/* 相关文章栏 */}
-      <div className='col-span-2 sticky top-10 max-h-[80vh] overflow-auto'>
+      <div className='col-span-2 sticky top-[10vh] max-h-[80vh] overflow-auto'>
         <RelaPost suitablePost={suitablePost} post={post}></RelaPost>
       </div>
     </div>
