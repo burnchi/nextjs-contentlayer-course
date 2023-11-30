@@ -14,14 +14,9 @@ const mdxComponents: MDXComponents = {
 }
 
 const PostLayout = ({ params }: { params: { slug: string[] } }) => {
-  // console.log(params.slug);
   const slugPath = params.slug.join('/')
-  // console.log(slugPath);
-
   const post = allPosts.find((post) => post._raw.flattenedPath === decodeURI(slugPath))
-
   const suitablePost = allPosts.filter((post) => post._raw.sourceFileDir === decodeURI(params.slug[0]))
-  // console.log(suitablePost.length);
   
   if (!post) throw new Error(`Post not found for slug: ${params.slug}`)
   const MDXContent = useMDXComponent(post.body.code)
