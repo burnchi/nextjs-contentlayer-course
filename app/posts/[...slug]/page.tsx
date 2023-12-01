@@ -7,10 +7,12 @@ import Video from '@/components/Video'
 import Pre from '@/components/Pre'
 import { useEffect } from 'react'
 import RelaPost from '@/components/RelaPost'
+import Image from 'next/image'
 
 const mdxComponents: MDXComponents = {
   Video,
-  pre: Pre
+  pre: Pre,
+  Image
 }
 
 const PostLayout = ({ params }: { params: { slug: string[] } }) => {
@@ -121,7 +123,7 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
   }, [post.toc.length])
   
   return (
-    <div className='w-full h-full  grid grid-cols-12 p-10'>
+    <div className='w-full h-full  grid grid-cols-12 p-10 gap-x-8'>
       {/* 目录 */}
       <div className='col-span-3 sticky top-[10vh] max-h-[80vh] overflow-auto'>
         <ul className='text-base  js-toc' >
@@ -162,7 +164,7 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
           </time>
           <h1 className="text-3xl font-bold">{post.title}</h1>
         </div>
-        <div className='prose
+        <div className='prose  max-w-full
       prose-a:bg-purple-200
       prose-blockquote:bg-purple-200 prose-blockquote:border-purple-700
       prose-blockquote:p-5 prose-blockquote:text-xl prose-blockquote:font-semibold

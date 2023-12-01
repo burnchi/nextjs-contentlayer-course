@@ -1,0 +1,331 @@
+---
+title: p1
+date: 2021-12-24
+describe: My first post
+---
+
+<div className="flex">
+<Image
+src="/mdpic/image-20231125235746614.png"
+width="200"
+height="1080"
+alt="image-20231125235746614.png"
+className='mx-auto'
+/>
+</div>
+
+
+
+
+<Image
+src="/mdpic/image-20231130173840908.png"
+width="1920"
+height="1080"
+alt="image-20231130173840908.png"
+className='w-full'
+/>
+
+## 连接数据库
+
+- 不会重复创建实例
+
+E:\Nextjs\11-21-next-dashboard\lib\db.ts
+
+```
+import { PrismaClient } from '@prisma/client'
+
+//创建数据库实例
+const prismaClientSingleton = () => {
+  return new PrismaClient()
+}
+
+type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClientSingleton | undefined
+}
+
+const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
+
+export default prisma
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+```
+
+
+
+## 定义操作数据库API
+
+- 拿着客户端传来的参数执行API
+- 不同路由对应着不同的API
+
+E:\Nextjs\11-21-next-dashboard\app\api\user\[slug]\route.ts
+
+```
+import prisma from "@/lib/db";
+import { NextResponse } from "next/server";
+
+export async function POST(req: Request,{params}:{params:{slug:string}}) {
+  console.log(params.slug);
+  
+  if (params.slug === "add") {
+    try {
+      // 客户端传来的参数
+      // console.log(req.json);
+      const { username, email , role ,active } = await req.json();
+      const newUser = await prisma.user.create({
+        data: {
+          name:username,email,role,active
+        }
+      })
+      return NextResponse.json( { status: 200})
+  
+    } catch(error) {
+      //插入不成功返回状态500
+      return NextResponse.json({ message: 'Something went wrong!'}, { status: 500 })
+    }
+  }
+  else if (params.slug === "delete") {
+    try {
+      // console.log(req.json);
+      const { id } = await req.json();
+
+      const deleteUser = await prisma.user.delete({
+        where: {
+          id: id,
+        },
+      })
+
+      return NextResponse.json( { status: 200})
+  
+    } catch(error) {
+      //删除不成功放回状态500
+      return NextResponse.json({ message: 'Something went wrong!'}, { status: 500 })
+    }
+  }
+  else if (params.slug === "update") {
+    try {
+      // console.log(req.json);
+      const { id, username, email , role ,active } = await req.json();
+
+      const updateUser = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name:username,email,role,active
+        },
+      })
+
+      return NextResponse.json( { status: 200})
+  
+    } catch(error) {
+      return NextResponse.json({ message: 'Something went wrong!'}, { status: 500 })
+    }
+  }
+
+
+}
+```
+
+## 按钮触发使用API（但需要达到自己定义的某种条件）
+
+- 输入框onchange更改状态
+- 按钮onclick带着状态请求API
+- 执行完API跳转哪个页面
+- 请求成功与失败的处理过程
+
+E:\Nextjs\11-21-next-dashboard\components\dashboard\manageUser\NewUser.tsx
+
+```
+const NewUser = () => {
+    const [formData, setFormData] = useState<User>({
+        username: "",
+        email: "",
+        role: "user",
+        active: true
+    });
+    const [open, setOpen] = React.useState(false);
+    const router = useRouter()
+    const { toast } = useToast()
+
+    const handleChange = (
+        e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
+        e.preventDefault();
+        // console.log('11');
+
+        const { name, value } = e.target;
+        // console.log({ name, value });
+        if (value === 'true' || value === 'false') {
+            const booleanValue = value === 'true';
+
+            setFormData({
+                ...formData,
+                [name]: booleanValue,
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+
+        }
+    };
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        // console.log(formData);
+        if (formData.email.length === 0 || formData.username.length === 0) {
+            toast({
+                variant: 'destructive',
+                title: `部分字段为空`,
+                description: `昵称或电子邮件不能为空！`,
+            })
+        }else{
+            try {
+                //规定好请求路由与合适的API对应
+                const response = await axios.post('/api/user/add', formData);
+    
+                // 插入数据之后页面跳转
+                if (response.status === 200) {
+                    router.refresh()
+                    setOpen(false)
+                    // 状态变为初始值
+                    setFormData({
+                        username: "",
+                        email: "",
+                        role: "user",
+                        active: true
+                    })
+                    toast({
+                        title: `执行添加操作`,
+                        description: `${formData.username} 添加成功`,
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+```
+
+
+
+# mongoose数据库CRUD
+
+查找特定几个记录
+
+
+<Image
+src="/mdpic/image-20231130173840908.png"
+width="1920"
+height="1080"
+alt="image-20231130173840908.png"
+className='w-full'
+/>
+
+
+
+
+
+
+# HTTP请求
+
+## axios post方法
+
+```
+const [formData, setFormData] = useState<User>({
+        username: "",
+        email: "",
+        role: "user",
+        active: true
+    });
+const response = await axios.post('/api/user/add', formData);
+```
+
+
+
+
+
+# 加密用户密码
+
+```
+import { AES } from 'crypto-ts';
+。。。
+var CryptoTS = require("crypto-ts");
+                // try {
+                // const salt = await bcrypt.genSalt(10)
+                // const hashedPassword = await bcrypt.hash(formData.password,salt)
+                // {...formData,password:hashedPassword}
+                const hashedPassword = AES.encrypt(formData.password, 'test').toString();
+                console.log(hashedPassword);
+                console.log(AES.decrypt(hashedPassword.toString(), 'test').toString(CryptoTS.enc.Utf8));
+
+```
+
+
+
+
+
+# 防抖（onchange）
+
+运用在onchange方法
+
+```
+npm i use-debounce@9.0.4
+```
+
+
+<Image
+src="/mdpic/image-20231130175041455.png"
+width="1920"
+height="1080"
+alt="image-20231130175041455.png"
+className='w-full'
+/>
+
+
+当停止输入0.3后才执行
+
+
+
+# 将字符串转数字
+
+parseInt()
+
+
+<Image
+src="/mdpic/image-20231130174215718.png"
+width="1920"
+height="1080"
+alt="image-20231130174215718.png"
+className='w-full'
+/>
+
+
+
+
+
+
+# 服务器组件接收url参数
+
+一定要在`page.tsx`里接收
+
+<Image
+src="/mdpic/image-20231130180315487.png"
+width="1920"
+height="1080"
+alt="image-20231130180315487.png"
+className='w-full'
+/>
+
+
+
+<Image
+src="/mdpic/image-20231130175041455.png"
+width="1920"
+height="1080"
+alt="image-20231130175041455.png"
+className='w-full'
+/>
