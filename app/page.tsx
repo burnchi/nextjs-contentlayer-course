@@ -2,15 +2,20 @@ import { compareDesc } from 'date-fns'
 import { allPosts } from 'contentlayer/generated'
 import PostCard from '@/components/PostCard'
 import Pagination from '@/components/Pagination'
+import { Suspense } from 'react'
 
-export default function Home({searchParams}) {
+export const dynamic = 'force-dynamic'
+
+export default function Home({ searchParams }) {
   const posts = allPosts.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
 
   return (
     <div className="mx-auto max-w-xl py-8">
-      
-      <PostCard posts={posts}  params={searchParams}></PostCard>
-      <Pagination posts={posts}></Pagination>
+
+      <PostCard posts={posts} params={searchParams}></PostCard>
+      <Suspense>
+        <Pagination posts={posts}></Pagination>
+      </Suspense>
     </div>
   )
 }
