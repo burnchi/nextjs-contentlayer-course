@@ -1,6 +1,5 @@
-import Link from 'next/link'
 import React from 'react'
-
+import Link from 'next/link'
 const Navbar = () => {
     const navItems = [
         {
@@ -21,8 +20,8 @@ const Navbar = () => {
         },
     ]
   return (
-    <div className='w-full flex  justify-center  h-[8vh] sticky top-0 bg-white '>
-        {
+    <>
+    {
             navItems.map( item => <Link href={item.link} key={item.title}
             className='group hover:bg-orange-400 p-3  flex items-center justify-center
              transition-all ease duration-500 relative
@@ -35,7 +34,7 @@ const Navbar = () => {
             </Link>
             )
         }
-    </div>
+    </>
   )
 }
 
