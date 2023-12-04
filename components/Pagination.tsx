@@ -16,7 +16,7 @@ const Pagination = ({posts}) => {
         replace(`${path}?${params}`)
     }
   return (
-    <div className=' flex justify-center gap-x-2'>
+    <div className=' flex justify-center gap-x-2 mb-10 mt-auto'>
         {
             pageButtons.map( item => <button key={item}
             className='p-2 bg-orange-400 hover:bg-orange-500'

@@ -10,7 +10,7 @@ export default function Home({ searchParams }) {
   const posts = allPosts.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
 
   return (
-    <div className="mx-auto max-w-xl py-8">
+    <div className="mx-auto max-w-xl py-8  min-h-[100vh] flex flex-col">
 
       <PostCard posts={posts} params={searchParams}></PostCard>
       <Suspense>

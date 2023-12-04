@@ -16,7 +16,7 @@ const PostCard = ({ posts, params }) => {
     }
 
     return (
-        <div className=' min-h-[70vh]'>
+        <div className=''>
             {
                 bakPosts.map((post, idx) => (
                     <div className="mb-8" key={idx}>

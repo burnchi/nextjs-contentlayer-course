@@ -6,7 +6,7 @@ import SearchDialog from './SearchDialog'
 const HomeHeader = () => {
     
   return (
-    <div className='w-full flex  justify-center  h-[8vh] sticky top-0 bg-white '>
+    <div className='w-full flex  justify-center  h-[8vh] sticky top-0 bg-white shadow-box'>
         <Navbar></Navbar>
         <SearchDialog></SearchDialog>
     </div>

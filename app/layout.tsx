@@ -3,6 +3,7 @@ import './globals.css'
 import localFont from 'next/font/local'
 import Navbar from '@/components/HomeHeader'
 import HomeHeader from '@/components/HomeHeader'
+import Footer from '@/components/Footer'
 
 
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={myFont.className}>
         <HomeHeader></HomeHeader>
         {children}
+        <Footer></Footer>
       </body>
     </html>
   )
