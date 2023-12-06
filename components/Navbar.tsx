@@ -23,12 +23,13 @@ const Navbar = () => {
     <>
     {
             navItems.map( item => <Link href={item.link} key={item.title}
-            className='group hover:bg-orange-400 p-3  flex items-center justify-center
+            className='group hover:bg-primary/60 p-3  flex items-center justify-center
              transition-all ease duration-500 relative
             '
+
             >
                 <span>{item.title}</span>
-                <span className='w-full absolute h-[5px] bottom-0 group-hover:bg-orange-500
+                <span className='w-full absolute h-[5px] bottom-0 group-hover:bg-primary
                 transition-all ease duration-500
                 '></span>
             </Link>

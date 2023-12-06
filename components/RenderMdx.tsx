@@ -24,11 +24,14 @@ const RenderMdx = ({post}) => {
                 </time>
                 <h1 className="text-3xl font-bold">{post.title}</h1>
             </div>
-            <div className='prose  max-w-full
+            <div className='prose  max-w-full  text-foreground/90
       prose-a:bg-purple-200
       prose-blockquote:bg-purple-200 prose-blockquote:border-purple-700
       prose-blockquote:p-5 prose-blockquote:text-xl prose-blockquote:font-semibold
       prose-strong:text-xl
+      prose-headings:text-foreground
+      prose-li:marker:text-primary-600
+      prose-strong:text-foreground
       '
                 id="blogdiv"
             >

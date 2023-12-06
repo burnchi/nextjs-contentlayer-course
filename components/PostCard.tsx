@@ -21,7 +21,7 @@ const PostCard = ({ posts, params }) => {
                 bakPosts.map((post, idx) => (
                     <div className="mb-8" key={idx}>
                         <h2 className="mb-1 text-xl">
-                            <Link href={post.url} className="text-blue-700 hover:text-blue-900 dark:text-blue-400">
+                            <Link href={post.url} className="">
                                 {post.title}
                             </Link>
                         </h2>

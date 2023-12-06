@@ -10,6 +10,7 @@ import { CiSearch } from "react-icons/ci"
 import { allPosts } from '@/.contentlayer/generated'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Link from 'next/link'
+import ThemeSwitchBtn from './ThemeSwitchBtn'
 
 const SearchDialog = () => {
     const [inputValue, setinputValue] = useState("")
@@ -66,14 +67,12 @@ const SearchDialog = () => {
                         </ScrollArea>
 
 
-
-
                     </div>
 
                 </DialogContent>
             </Dialog>
 
-
+            <ThemeSwitchBtn></ThemeSwitchBtn>
         </div>
     )
 }
